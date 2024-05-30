@@ -11,7 +11,7 @@ from sklearn.metrics import precision_score, recall_score
 
 
 # st.set_option('deprecation.showPyplotGlobalUse', False)
-st.write('fixing')
+st.write('fixing locally')
 
 import matplotlib.pyplot as plt
 
