@@ -53,7 +53,7 @@ def main():
     st.sidebar.title("Binary Classification Web App")
 
     st.sidebar.subheader("Choose Dataset")
-    dataset = st.sidebar.selectbox("dataset", ("mushrooms", "mushrooms"))
+    dataset = st.sidebar.selectbox("dataset", ("mushrooms", "Iris"))
 
     df = pd.read_csv("./{}.csv".format(str(dataset)))
     labelencoder=LabelEncoder()
