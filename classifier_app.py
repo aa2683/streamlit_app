@@ -55,7 +55,7 @@ def main():
     st.sidebar.subheader("Choose Dataset")
     dataset = st.sidebar.selectbox("dataset", ("mushrooms"))
 
-    df = pd.read_csv("./{}.csv".format(dataset))
+    df = pd.read_csv("./{}.csv".format(str(dataset)))
     labelencoder=LabelEncoder()
     for col in df.columns:
         df[col] = labelencoder.fit_transform(df[col])
