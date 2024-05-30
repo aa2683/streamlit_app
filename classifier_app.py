@@ -60,6 +60,11 @@ def main():
     for col in df.columns:
         df[col] = labelencoder.fit_transform(df[col])
 
+    if st.sidebar.checkbox("Show raw data", False):
+        st.subheader("Mushroom Data Set (Classification)")
+        st.write(df)
+
+
     class_names = ['edible', 'poisonous']
     x_train, x_test, y_train, y_test = split(df)
 
@@ -152,9 +157,7 @@ def main():
             st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names).round(2))
             plot_metrics(model, metrics, y_test, y_pred)
 
-    if st.sidebar.checkbox("Show raw data", False):
-        st.subheader("Mushroom Data Set (Classification)")
-        st.write(df)
+   
        
 
 if __name__ == '__main__':
