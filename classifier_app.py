@@ -60,7 +60,7 @@ def main():
     
     # class_names = list(df[[target_column]].unique())
 
-    st.write(df[[target_column]].unique())
+    st.write(set(df[target_column]))
 
     labelencoder=LabelEncoder()
     for col in df.columns:
