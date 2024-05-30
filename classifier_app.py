@@ -13,7 +13,7 @@ from sklearn.metrics import precision_score, recall_score
 # st.set_option('deprecation.showPyplotGlobalUse', False)
 st.write('fixing')
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 def main():
     st.title("Binary Classification Web App")
     st.sidebar.title("Binary Classification Web App")
