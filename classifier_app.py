@@ -57,9 +57,10 @@ def main():
 
     df = pd.read_csv("./{}.csv".format(str(dataset)))
     target_column  = st.sidebar.selectbox("target column", df.columns)
-    class_names = list(df[[target_column]].unique())
+    
+    # class_names = list(df[[target_column]].unique())
 
-    st.write(class_names)
+    st.write(df[[target_column]])
 
     labelencoder=LabelEncoder()
     for col in df.columns:
