@@ -56,9 +56,9 @@ def main():
     dataset = st.sidebar.selectbox("dataset", ("mushrooms", "Iris"))
 
     df = pd.read_csv("./{}.csv".format(str(dataset)))
-    labelencoder=LabelEncoder()
-    for col in df.columns:
-        df[col] = labelencoder.fit_transform(df[col])
+    # labelencoder=LabelEncoder()
+    # for col in df.columns:
+    #     df[col] = labelencoder.fit_transform(df[col])
 
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("Mushroom Data Set (Classification)")
