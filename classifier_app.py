@@ -13,7 +13,6 @@ from sklearn.metrics import precision_score, recall_score
 # st.set_option('deprecation.showPyplotGlobalUse', False)
 st.write('fixing')
 
-pip install matplotlib
 import matplotlib.pyplot as plt
 
 def main():
