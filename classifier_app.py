@@ -18,15 +18,6 @@ from sklearn.naive_bayes import GaussianNB
 # st.set_option('deprecation.showPyplotGlobalUse', False)
 st.write('fixing locally')
 
-
-
-def load_data():
-        data = pd.read_csv("./mushrooms.csv")
-        labelencoder=LabelEncoder()
-        for col in data.columns:
-            data[col] = labelencoder.fit_transform(data[col])
-        return data
-    
 def split(df):
     y = df.type
     x = df.drop(columns=['type'])
@@ -60,19 +51,20 @@ def plot_metrics(model, metrics_list, y_test, y_pred):
 def main():
     st.title("Binary Classification Web App")
     st.sidebar.title("Binary Classification Web App")
-    st.markdown("Are your mushrooms edible or poisonous? Deveoped by Amin 🍄")
-    st.sidebar.markdown("Are your mushrooms edible or poisonous? 🍄")
 
-    
+    st.sidebar.subheader("Choose Dataset")
+    dataset = st.sidebar.selectbox("dataset", ("mushrooms"))
 
-    df = load_data()
+    df = pd.read_csv("./{}.csv".format(dataset))
+    labelencoder=LabelEncoder()
+    for col in df.columns:
+        df[col] = labelencoder.fit_transform(df[col])
 
     class_names = ['edible', 'poisonous']
-    
     x_train, x_test, y_train, y_test = split(df)
 
     st.sidebar.subheader("Choose Classifier")
-    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest", "K-nearest neighbors", "Gaussian Naive Bayes"))
+    classifier = st.sidebar.selectbox("dataset", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest", "K-nearest neighbors", "Gaussian Naive Bayes"))
 
     
     if classifier == 'Gaussian Naive Bayes':
