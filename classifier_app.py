@@ -56,6 +56,9 @@ def main():
     dataset = st.sidebar.selectbox("dataset", ("mushrooms", "Iris"))
 
     df = pd.read_csv("./{}.csv".format(str(dataset)))
+    target_column  = st.sidebar.selectbox("target column", df.columns)
+    class_names = list(df.columns)
+
     labelencoder=LabelEncoder()
     for col in df.columns:
         df[col] = labelencoder.fit_transform(df[col])
@@ -64,9 +67,7 @@ def main():
         st.subheader("Mushroom Data Set (Classification)")
         st.write(df)
 
-    target_column  = st.sidebar.selectbox("target column", df.columns)
-
-    class_names = ['edible', 'poisonous']
+    
     x_train, x_test, y_train, y_test = split(df, target_column)
 
     st.sidebar.subheader("Choose Classifier")
