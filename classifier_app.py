@@ -57,10 +57,10 @@ def main():
 
     df = pd.read_csv("./{}.csv".format(str(dataset)))
     target_column  = st.sidebar.selectbox("target column", df.columns)
-    class_names = list(df.columns)
+    class_names = list(df.target_column.unique())
 
     st.write(class_names)
-    
+
     labelencoder=LabelEncoder()
     for col in df.columns:
         df[col] = labelencoder.fit_transform(df[col])
