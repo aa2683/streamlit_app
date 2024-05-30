@@ -18,9 +18,9 @@ from sklearn.naive_bayes import GaussianNB
 # st.set_option('deprecation.showPyplotGlobalUse', False)
 st.write('fixing locally')
 
-def split(df):
-    y = df.type
-    x = df.drop(columns=['type'])
+def split(df, target_column):
+    y = df.target_column
+    x = df.drop(columns=[target_column])
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
     return x_train, x_test, y_train, y_test
 
@@ -67,7 +67,7 @@ def main():
     target_column  = st.sidebar.selectbox("target column", df.columns)
 
     class_names = ['edible', 'poisonous']
-    x_train, x_test, y_train, y_test = split(df)
+    x_train, x_test, y_train, y_test = split(df, target_column)
 
     st.sidebar.subheader("Choose Classifier")
     classifier = st.sidebar.selectbox("dataset", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest", "K-nearest neighbors", "Gaussian Naive Bayes"))
