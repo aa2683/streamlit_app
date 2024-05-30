@@ -59,6 +59,8 @@ def main():
     target_column  = st.sidebar.selectbox("target column", df.columns)
     class_names = list(df.columns)
 
+    st.write(class_names)
+    
     labelencoder=LabelEncoder()
     for col in df.columns:
         df[col] = labelencoder.fit_transform(df[col])
