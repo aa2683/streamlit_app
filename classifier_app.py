@@ -56,9 +56,9 @@ def main():
     dataset = st.sidebar.selectbox("dataset", ("mushrooms", "Iris"))
 
     df = pd.read_csv("./{}.csv".format(str(dataset)))
-    target_column  = st.sidebar.selectbox("target column", list(df[target_column].unique()))
+    target_column  = st.sidebar.selectbox("target column", df.columns)
     
-    # class_names = list(df[[target_column]].unique())
+    class_names = list(df[target_column].unique())
 
 
     labelencoder=LabelEncoder()
