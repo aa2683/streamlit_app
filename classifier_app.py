@@ -19,7 +19,7 @@ from sklearn.naive_bayes import GaussianNB
 st.write('fixing locally')
 
 def split(df, target_column):
-    y = df.target_column
+    y = df[[target_column]]
     x = df.drop(columns=[target_column])
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
     return x_train, x_test, y_train, y_test
