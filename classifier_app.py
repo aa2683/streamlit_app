@@ -8,6 +8,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay, PrecisionRecallDisplay, confusion_matrix
 from sklearn.metrics import precision_score, recall_score
+import matplotlib.pyplot as plt
 
 #-new
 from sklearn.neighbors import KNeighborsClassifier
@@ -17,7 +18,44 @@ from sklearn.naive_bayes import GaussianNB
 # st.set_option('deprecation.showPyplotGlobalUse', False)
 st.write('fixing locally')
 
-import matplotlib.pyplot as plt
+
+
+def load_data():
+        data = pd.read_csv("./mushrooms.csv")
+        labelencoder=LabelEncoder()
+        for col in data.columns:
+            data[col] = labelencoder.fit_transform(data[col])
+        return data
+    
+def split(df):
+    y = df.type
+    x = df.drop(columns=['type'])
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
+    return x_train, x_test, y_train, y_test
+
+def plot_metrics(model, metrics_list, y_test, y_pred):
+    if 'Confusion Matrix' in metrics_list:
+        st.subheader("Confusion Matrix")
+
+        cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+        fig, ax = plt.subplots(figsize=(10, 7))
+        disp.plot(ax=ax)
+        st.pyplot(fig)
+
+    if 'ROC Curve' in metrics_list:
+        st.subheader("ROC Curve")
+        disp = RocCurveDisplay.from_predictions(y_test, y_pred)
+        fig, ax = plt.subplots(figsize=(10, 7))
+        disp.plot(ax=ax)
+        st.pyplot(fig)
+    
+    if 'Precision-Recall Curve' in metrics_list:
+        st.subheader('Precision-Recall Curve')
+        disp = PrecisionRecallDisplay.from_predictions(y_test, y_pred)
+        fig, ax = plt.subplots(figsize=(10, 7))
+        disp.plot(ax=ax)
+        st.pyplot(fig)
 
 def main():
     st.title("Binary Classification Web App")
@@ -25,44 +63,7 @@ def main():
     st.markdown("Are your mushrooms edible or poisonous? Deveoped by Amin 🍄")
     st.sidebar.markdown("Are your mushrooms edible or poisonous? 🍄")
 
-    # @st.cache_data(persist=True)
-    def load_data():
-        data = pd.read_csv("./mushrooms.csv")
-        labelencoder=LabelEncoder()
-        for col in data.columns:
-            data[col] = labelencoder.fit_transform(data[col])
-        return data
     
-    # @st.cache_data(persist=True)
-    def split(df):
-        y = df.type
-        x = df.drop(columns=['type'])
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
-        return x_train, x_test, y_train, y_test
-    
-    def plot_metrics(model, metrics_list, y_test, y_pred):
-        if 'Confusion Matrix' in metrics_list:
-            st.subheader("Confusion Matrix")
-
-            cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
-            disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
-            fig, ax = plt.subplots(figsize=(10, 7))
-            disp.plot(ax=ax)
-            st.pyplot(fig)
-
-        if 'ROC Curve' in metrics_list:
-            st.subheader("ROC Curve")
-            disp = RocCurveDisplay.from_predictions(y_test, y_pred)
-            fig, ax = plt.subplots(figsize=(10, 7))
-            disp.plot(ax=ax)
-            st.pyplot(fig)
-        
-        if 'Precision-Recall Curve' in metrics_list:
-            st.subheader('Precision-Recall Curve')
-            disp = PrecisionRecallDisplay.from_predictions(y_test, y_pred)
-            fig, ax = plt.subplots(figsize=(10, 7))
-            disp.plot(ax=ax)
-            st.pyplot(fig)
 
     df = load_data()
 
