@@ -64,6 +64,7 @@ def main():
         st.subheader("Mushroom Data Set (Classification)")
         st.write(df)
 
+    target_column  = st.sidebar.selectbox("target column", df.columns)
 
     class_names = ['edible', 'poisonous']
     x_train, x_test, y_train, y_test = split(df)
