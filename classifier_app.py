@@ -9,6 +9,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay, PrecisionRecallDisplay, confusion_matrix
 from sklearn.metrics import precision_score, recall_score
 
+#-new
+from sklearn.neighbors import KNeighborsClassifier
+
 
 # st.set_option('deprecation.showPyplotGlobalUse', False)
 st.write('fixing locally')
@@ -67,7 +70,22 @@ def main():
     x_train, x_test, y_train, y_test = split(df)
 
     st.sidebar.subheader("Choose Classifier")
-    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest"))
+    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest", "K-nearest neighbors"))
+
+    if classifier == 'K-nearest neighbors':
+        n_neighbors = st.sidebar.slider("number of neighbors", 12, 500, key='n_neigbbours')
+        metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
+        if st.sidebar.button("Classify", key='classify'):
+            st.subheader("K-nearest neighbors")
+            model = KNeighborsClassifier(n_neighbors=n_neighbors)
+            model.fit(x_train, y_train)
+            accuracy = model.score(x_test, y_test)
+            y_pred = model.predict(x_test)
+            st.write("Accuracy: ", accuracy)
+            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names).round(2))
+            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names).round(2))
+            plot_metrics(model, metrics, y_test, y_pred)
+
 
     if classifier == 'Support Vector Machine (SVM)':
         st.sidebar.subheader("Model Hyperparameters")
