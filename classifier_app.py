@@ -11,6 +11,7 @@ from sklearn.metrics import precision_score, recall_score
 
 #-new
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 
 
 # st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -70,10 +71,25 @@ def main():
     x_train, x_test, y_train, y_test = split(df)
 
     st.sidebar.subheader("Choose Classifier")
-    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest", "K-nearest neighbors"))
+    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest", "K-nearest neighbors", "Gaussian Naive Bayes"))
+
+    
+    if classifier == 'Gaussian Naive Bayes':
+        
+        metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
+        if st.sidebar.button("Classify", key='classify'):
+            st.subheader("Gaussian Naive Bayes")
+            model = GaussianNB()
+            model.fit(x_train, y_train)
+            accuracy = model.score(x_test, y_test)
+            y_pred = model.predict(x_test)
+            st.write("Accuracy: ", accuracy)
+            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names).round(2))
+            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names).round(2))
+            plot_metrics(model, metrics, y_test, y_pred)
 
     if classifier == 'K-nearest neighbors':
-        n_neighbors = st.sidebar.slider("number of neighbors", 12, 500, key='n_neigbbours')
+        n_neighbors = st.sidebar.slider("number of neighbors", 12, 30, key='n_neigbbours')
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
         if st.sidebar.button("Classify", key='classify'):
             st.subheader("K-nearest neighbors")
