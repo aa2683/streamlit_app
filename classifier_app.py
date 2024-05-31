@@ -26,12 +26,12 @@ def split(df, target_column):
     return x_train, x_test, y_train, y_test
 
 def plot_metrics(model, metrics_list, y_test, y_pred):
-    st.write('aa',model.classes_[0])
+    
     if 'Confusion Matrix' in metrics_list:
         st.subheader("Confusion Matrix")
 
-        cm = confusion_matrix(y_test, y_pred, labels=model.classes_[0])
-        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_[0])
+        cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
         fig, ax = plt.subplots(figsize=(10, 7))
         disp.plot(ax=ax)
         st.pyplot(fig)
