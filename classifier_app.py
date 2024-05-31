@@ -55,7 +55,7 @@ def main():
     st.sidebar.title("Binary Classification Web App")
 
     st.sidebar.subheader("Choose Dataset")
-    dataset = st.sidebar.selectbox("dataset", ("mushrooms", "heart_statlog", "AIDS_Classification"))
+    dataset = st.sidebar.selectbox("dataset", ("mushrooms", "heart_statlog", "AIDS_Classification", "stroke-data" , "bank_churn", "diabetes_prediction", "weatherAUS"))
 
     df = pd.read_csv("./{}.csv".format(str(dataset)))
     target_column  = st.sidebar.selectbox("target column", df.columns)
