@@ -15,7 +15,7 @@ import seaborn as sns
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
-
+st.write('edit on github
 def split(df, target_column):
     y = df[[target_column]]
     x = df.drop(columns=[target_column])
