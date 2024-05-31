@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay, PrecisionRecallDisplay, confusion_matrix
 from sklearn.metrics import precision_score, recall_score
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 #-new
 from sklearn.neighbors import KNeighborsClassifier
@@ -16,20 +17,21 @@ from sklearn.naive_bayes import GaussianNB
 
 
 # st.set_option('deprecation.showPyplotGlobalUse', False)
-st.write('fixing locally')
+st.write('fixing locally2')
 
 def split(df, target_column):
     y = df[[target_column]]
     x = df.drop(columns=[target_column])
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
     return x_train, x_test, y_train, y_test
 
 def plot_metrics(model, metrics_list, y_test, y_pred):
+    st.write('aa',model.classes_[0])
     if 'Confusion Matrix' in metrics_list:
         st.subheader("Confusion Matrix")
 
-        cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
-        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+        cm = confusion_matrix(y_test, y_pred, labels=model.classes_[0])
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_[0])
         fig, ax = plt.subplots(figsize=(10, 7))
         disp.plot(ax=ax)
         st.pyplot(fig)
@@ -53,18 +55,18 @@ def main():
     st.sidebar.title("Binary Classification Web App")
 
     st.sidebar.subheader("Choose Dataset")
-    dataset = st.sidebar.selectbox("dataset", ("mushrooms", "Iris"))
+    dataset = st.sidebar.selectbox("dataset", ("mushrooms", "heart_statlog"))
 
     df = pd.read_csv("./{}.csv".format(str(dataset)))
     target_column  = st.sidebar.selectbox("target column", df.columns)
     
     class_names = list(df[target_column].unique())
 
-    st.write(class_names)
 
     labelencoder=LabelEncoder()
     for col in df.columns:
         df[col] = labelencoder.fit_transform(df[col])
+
 
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("Mushroom Data Set (Classification)")
@@ -73,38 +75,9 @@ def main():
     
     x_train, x_test, y_train, y_test = split(df, target_column)
 
+
     st.sidebar.subheader("Choose Classifier")
     classifier = st.sidebar.selectbox("dataset", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest", "K-nearest neighbors", "Gaussian Naive Bayes"))
-
-    
-    if classifier == 'Gaussian Naive Bayes':
-        
-        metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
-        if st.sidebar.button("Classify", key='classify'):
-            st.subheader("Gaussian Naive Bayes")
-            model = GaussianNB()
-            model.fit(x_train, y_train)
-            accuracy = model.score(x_test, y_test)
-            y_pred = model.predict(x_test)
-            st.write("Accuracy: ", accuracy)
-            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names).round(2))
-            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names).round(2))
-            plot_metrics(model, metrics, y_test, y_pred)
-
-    if classifier == 'K-nearest neighbors':
-        n_neighbors = st.sidebar.slider("number of neighbors", 12, 30, key='n_neigbbours')
-        metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
-        if st.sidebar.button("Classify", key='classify'):
-            st.subheader("K-nearest neighbors")
-            model = KNeighborsClassifier(n_neighbors=n_neighbors)
-            model.fit(x_train, y_train)
-            accuracy = model.score(x_test, y_test)
-            y_pred = model.predict(x_test)
-            st.write("Accuracy: ", accuracy)
-            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names).round(2))
-            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names).round(2))
-            plot_metrics(model, metrics, y_test, y_pred)
-
 
     if classifier == 'Support Vector Machine (SVM)':
         st.sidebar.subheader("Model Hyperparameters")
@@ -122,9 +95,38 @@ def main():
             accuracy = model.score(x_test, y_test)
             y_pred = model.predict(x_test)
             st.write("Accuracy: ", accuracy)
-            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names).round(2))
-            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names).round(2))
+            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names, average='micro').round(2))
+            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names, average='micro').round(2))
             plot_metrics(model, metrics, y_test, y_pred)
+
+    if classifier == 'Gaussian Naive Bayes':
+        
+        metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
+        if st.sidebar.button("Classify", key='classify'):
+            st.subheader("Gaussian Naive Bayes")
+            model = GaussianNB()
+            model.fit(x_train, y_train)
+            accuracy = model.score(x_test, y_test)
+            y_pred = model.predict(x_test)
+            st.write("Accuracy: ", accuracy)
+            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names, average='micro').round(2))
+            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names, average='micro').round(2))
+            plot_metrics(model, metrics, y_test, y_pred)
+
+    if classifier == 'K-nearest neighbors':
+        n_neighbors = st.sidebar.slider("number of neighbors", 12, 30, key='n_neigbbours')
+        metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
+        if st.sidebar.button("Classify", key='classify'):
+            st.subheader("K-nearest neighbors")
+            model = KNeighborsClassifier(n_neighbors=n_neighbors)
+            model.fit(x_train, y_train)
+            accuracy = model.score(x_test, y_test)
+            y_pred = model.predict(x_test)
+            st.write("Accuracy: ", accuracy)
+            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names, average='micro').round(2))
+            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names, average='micro').round(2))
+            plot_metrics(model, metrics, y_test, y_pred)
+
     
     if classifier == 'Logistic Regression':
         st.sidebar.subheader("Model Hyperparameters")
@@ -140,8 +142,8 @@ def main():
             accuracy = model.score(x_test, y_test)
             y_pred = model.predict(x_test)
             st.write("Accuracy: ", accuracy)
-            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names).round(2))
-            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names).round(2))
+            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names, average='micro').round(2))
+            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names, average='micro').round(2))
             plot_metrics(model, metrics, y_test, y_pred)
     
     if classifier == 'Random Forest':
@@ -158,8 +160,8 @@ def main():
             accuracy = model.score(x_test, y_test)
             y_pred = model.predict(x_test)
             st.write("Accuracy: ", accuracy)
-            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names).round(2))
-            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names).round(2))
+            st.write("Precision: ", precision_score(y_test, y_pred, labels=class_names, average='micro').round(2))
+            st.write("Recall: ", recall_score(y_test, y_pred, labels=class_names, average='micro').round(2))
             plot_metrics(model, metrics, y_test, y_pred)
 
    
